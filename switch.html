@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <!--<meta http-equiv="Refresh" content="300"/>-->
+    <title>Node socket</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style type="text/css" media="screen">
+        body {
+            padding: 10px;
+        }
+
+
+    </style>
+</head>
+<body>
+<h1>SWITCH</h1>
+
+<hr>
+<a id="main" class="btn btn-primary" href="main">MAIN</a>
+<!--<button id="reboot" class="btn btn-primary">reboot</button>
+<button id="ServerClose" class="btn btn-primary">ServerClose</button>
+<a id="cctv" class="btn btn-primary" href="cctv">CCTV</a>-->
+
+<hr>
+<button id="on" class="btn btn-info">Status</button>
+<!--
+<button id="off" class="btn btn-danger">Off</button>
+-->
+<hr>
+<div id="sw"></div>
+
+</body>
+</html>
+
+<script>
+    var socket = io();
+    socket.on('connect', function () {
+        console.log('Siz soket serverga ulandingiz');
+    });
+
+    $("#on").on("click", function (e) {
+        if ($(this).text() == "Off") {
+            console.log("ON!");
+            $(this).text("Status").css({"color": "white", "background-color": "grey"});
+            socket.emit('switch', 1);
+        }
+        if ($(this).text() == "On") {
+            console.log("OFF!");
+            $(this).text("Status").css({"color": "white", "background-color": "grey"});
+            socket.emit('switch', 0);
+        }
+
+        //socket.emit('switch', 1);
+    });
+    $("#off").on("click", function (e) {
+        console.log("OFF!");
+        socket.emit('switch', 0);
+    });
+    socket.on('mystatus', function (data) {
+        console.log('mystatus: ' + data);
+        if (data == 1) {
+            var color = "#00FF00";
+            var text = "On";
+        }
+        if (data == 0) {
+            var color = "#FF0000";
+            var text = "Off";
+        }
+        $("#sw").text(data).css({"color": "white", "background-color": color});
+        //------------
+        $("#on").text(text).css({"color": "white", "background-color": color});
+
+    });
+
+
+    /*socket.on('switch',function(data){
+     console.log('switch: '+ data);
+     if(data==1)var color = "#00FF00";
+     if(data==0)var color = "#FF0000";
+     $("#sw").text(data).css({"color":"white","background-color":color});
+     });*/
+
+
+</script>
+

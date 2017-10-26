@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <!--<meta http-equiv="Refresh" content="300"/>-->
+    <title>Node socket</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style type="text/css" media="screen">
+        body {
+            padding: 10px;
+        }
+
+        video {
+            display: none;
+        }
+
+        .vfdiv {
+            position: relative;
+            width: 120px;
+            display: inline-block;
+            margin: 0px 5px 5px 0px;
+        }
+
+        .vf {
+            display: block;
+            position: relative;
+            width: 120px;
+            /*height: 180px;*/
+            cursor: pointer;
+        }
+
+        .vfgr {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+
+            background-color: #FF0000;
+            /*background-image: url("/res/greenred.png");*/
+            border-radius: 8px;
+            width: 8px;
+            height: 8px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<h1>MAIN</h1>
+
+<!--<input id="message_input">
+<button id="send">Send</button>-->
+<hr>
+<a id="main" class="btn btn-primary" href="switch">Switch</a>
+<button id="reboot" class="btn btn-primary">reboot</button>
+<button id="ServerClose" class="btn btn-primary">ServerClose</button>
+<a id="cctv" class="btn btn-primary" href="cctv">CCTV</a>
+
+<hr>
+<button id="on" class="btn btn-info">On</button>
+<button id="off" class="btn btn-danger">Off</button>
+
+<!--
+<button id="rpi" class="btn btn-primary">rpi</button>
+-->
+<hr>
+<!--<h1>Video HTML 5</h1>
+<video controls src="http://localhost:9999/"></video>-->
+<!--<img id="camera110" src="#">
+<img id="camera111" src="#">
+<img id="camera112" src="#">-->
+<!--<div id="vidstats"></div>
+<div id="videoframes"></div>-->
+</body>
+</html>
+
+<script>
+    //document.body.createElement('img');
+
+    var ipaddress = 'http://192.0.0.102:3000';
+    var socket = io();
+    //var cctv = io(ipaddress + '/cctv');
+    //var cam001 = socket.connect('http://192.168.0.100/001', {port: 3000})
+    // , cam002 = io.connect('http://192.168.0.102/002', {port: 3000})
+    /*,
+     cam003 = io.connect('http://bqm.sts.net.ve/003', {port:8081}),
+     cam004 = io.connect('http://bqm.sts.net.ve/004', {port:8081});*/
+    socket.on('connect', function () {
+        console.log('You\'re connected to the streaming server');
+    });
+
+    $(document).on('click','#cctv',function(){
+
+    });
+
+    /********************/
+
+    /*socket.on("message", function (a) {
+     console.log(a);
+     });
+
+     socket.on("register", function (a) {
+     console.log(a);
+     });*/
+
+    function sendMessage() {
+        var input = $('#message_input');
+        var text = input.val();
+        /*socket.emit('message', text, function () {
+         //printMessage(myname + ": " + text);
+         });*/
+        socket.emit('message', {text: text});
+        console.log({text: text});
+        input.val('');
+        //return false;
+    }
+
+    $("#on").on("click", function (e) {
+        socket.emit('onoff', 1);
+    });
+    $("#off").on("click", function (e) {
+        socket.emit('onoff', 0);
+    });
+    $("#reboot").on("click", function (e) {
+        //socket.emit('reboot', 1);
+    });
+    $("#ServerClose").on("click", function (e) {
+        socket.emit('ServerClose', 1);
+    });
+    /*$("#rpi").on("click", function (e) {
+     socket.emit('rpi', 1);
+     });*/
+
+    $('#send').on("click", function (e) {
+        //e.keyCode==13
+
+        //console.log(e);
+        sendMessage();
+    });
+    $('#message_input').on("keyup", function (e) {
+        if (e.keyCode == 13) {
+            sendMessage();
+        }
+        //console.log(e);
+    });
+
+    //sendMessage();
+
+</script>
+
